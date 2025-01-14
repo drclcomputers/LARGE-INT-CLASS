@@ -1,6 +1,5 @@
 #pragma once
 #include<iostream>
-#include<cmath>
 
 #define len bigint[0]
 
