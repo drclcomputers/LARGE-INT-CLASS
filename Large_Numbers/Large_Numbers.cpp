@@ -13,15 +13,14 @@ using namespace big;
 
 int main() {
 	BIGUNSIGNEDINT A, B;
-	char a[10000] = "123456789", b[100]="2147000";
+	char a[10000] = "1234", b[100]="51";
 	A.set(a);
 	B.set(b);
 
 	//A = 12;
 	//B = 3;
 
-	cout << A*B*B*B;
-
+	cout << bigpow(A, B);
 
 	return 0;
 }

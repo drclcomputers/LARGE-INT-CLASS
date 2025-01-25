@@ -63,11 +63,14 @@ void BIGUNSIGNEDINT::set(char* p) {
 
 void BIGUNSIGNEDINT::set_zero() {
 	len = 1;
-	for (int i = 1; i <= 10029; i++) bigint[i] = 0;
+	for (int i = 1; i <= 10049; i++) bigint[i] = 0;
 }
 
 
-//mathematical operations
+
+//Mathematical Operations -----------------------------------------------------------------
+
+//Addition
 
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator+(BIGUNSIGNEDINT const& obj) {
 	BIGUNSIGNEDINT res; // Result of addition
@@ -109,10 +112,15 @@ void BIGUNSIGNEDINT::operator+=(long long obj) {
 void BIGUNSIGNEDINT::operator+=(int obj) {
 	*this = *this + BIGUNSIGNEDINT(obj);
 }
+BIGUNSIGNEDINT BIGUNSIGNEDINT::operator++() {
+	return *this + 1;
+}
+
+//Substraction
 
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator-(BIGUNSIGNEDINT const& obj) { //substraction
-	//if (BIGUNSIGNEDINT(0) == obj) return *this;
-
+	if (obj==0) return *this;
+	if (*this == obj) return 0;
 	BIGUNSIGNEDINT res; //result
 
 	int mn = std::max(len, obj.len);
@@ -141,7 +149,7 @@ BIGUNSIGNEDINT BIGUNSIGNEDINT::operator-(BIGUNSIGNEDINT const& obj) { //substrac
 			}
 		}
 	}
-	else {
+	else {/*
 		for (int i = 1; i <= mn; i++) {
 			if (min) {
 				if (obj.bigint[i] - bigint[i] - 1 >= 0) {
@@ -159,7 +167,8 @@ BIGUNSIGNEDINT BIGUNSIGNEDINT::operator-(BIGUNSIGNEDINT const& obj) { //substrac
 					res.bigint[i] = obj.bigint[i] - bigint[i] + 10, min = 1;
 				}
 			}
-		}
+		}*/
+		return 0;
 	}
 	for (int i = res.len; i > 1; i--)
 		if (res.bigint[i] == 0) res.len--;
@@ -182,18 +191,26 @@ void BIGUNSIGNEDINT::operator-=(long long obj) {
 void BIGUNSIGNEDINT::operator-=(int obj) {
 	*this = *this - BIGUNSIGNEDINT(obj);
 }
+BIGUNSIGNEDINT BIGUNSIGNEDINT::operator--() {
+	return *this - 1;
+}
+
+//Multiplication
 
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator*(BIGUNSIGNEDINT const& obj) { //multiplication
-	if (BIGUNSIGNEDINT(0) == obj || BIGUNSIGNEDINT(0) == *this) { set_zero(); return 0; }
+	if (obj==0 || *this==0) { set_zero(); return 0; }
 
 	BIGUNSIGNEDINT res; //result
 
 	int mx = len + obj.len - 1;
+
+	if (mx > 10049) throw std::exception("Value is too large for this type!");
+
 	int add = 0;
 
 	res.len = mx;
 
-	if (*this > obj) {
+	if (*this >= obj) {
 
 		for (int i = 1; i <= len; i++) {
 			for (int j = 1; j <= obj.len; j++) {
@@ -208,7 +225,6 @@ BIGUNSIGNEDINT BIGUNSIGNEDINT::operator*(BIGUNSIGNEDINT const& obj) { //multipli
 		}
 	}
 	else {
-		/*
 		for (int i = 1; i <= obj.len; i++) {
 			for (int j = 1; j <= len; j++) {
 				res.bigint[i + j - 1] += obj.bigint[i] * bigint[j];
@@ -219,7 +235,7 @@ BIGUNSIGNEDINT BIGUNSIGNEDINT::operator*(BIGUNSIGNEDINT const& obj) { //multipli
 			add += res.bigint[i];
 			res.bigint[i] = add % 10;
 			add /= 10;
-		}*/
+		}
 	}
 
 	if (add)
@@ -243,67 +259,35 @@ void BIGUNSIGNEDINT::operator*=(int obj) {
 	*this = *this * BIGUNSIGNEDINT(obj);
 }
 
+//Division
+
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator/(BIGUNSIGNEDINT const& obj) { //division
-	if (BIGUNSIGNEDINT(0) == obj) throw std::exception("Division by zero!");
+	if (obj == 0) throw std::exception("Division by zero!");
+	if (*this == 0) return 0;
+	if (*this < obj) return 0;
+	if (obj == 1) return *this;
 
-	int o = 0;
+	BIGUNSIGNEDINT quotient;
+	BIGUNSIGNEDINT remainder;
 
-	BIGUNSIGNEDINT aux, rez;
+	for (int i = len; i > 0; --i) {
+		remainder = remainder * 10 + bigint[i];
 
-	if (*this > obj) {
-		for (int i = len; i > len - obj.len; i--)
-			aux = aux * 10 + bigint[i];
-
-		//aux.len = len - obj.len - 1;
-
-		while (len - obj.len - o > 0) {
-
-			if (aux < obj) aux = aux * 10 + bigint[len - obj.len - o];
-			//cout << bigint[len - obj.len - o] << ' ';
-			if (BIGUNSIGNEDINT(0) == aux) {
-				rez = rez * 10;
-				o++;
-				continue;
-			}
-			int i = 0;
-			while (aux >= obj) {
-				aux = aux - obj;
-				i++;
-			}
-
-			rez = rez * 10 + i;
-
-			o++;
+		int digitQuotient = 0;
+		while (remainder >= obj) {
+			remainder = remainder - obj;
+			++digitQuotient;
 		}
-	}
-	else {
-		for (int i = len; i > obj.len-len; i--)
-			aux = aux * 10 + obj.bigint[i];
 
-		//aux.len = len - obj.len - 1;
-
-		while (obj.len - len - o > 0) {
-
-			if (aux < *this) aux = aux * 10 + obj.bigint[obj.len - len - o];
-			//cout << bigint[len - obj.len - o] << ' ';
-			if (BIGUNSIGNEDINT(0) == aux) {
-				rez = rez * 10;
-				o++;
-				continue;
-			}
-			int i = 0;
-			while (aux >= *this) {
-				aux = aux - *this;
-				i++;
-			}
-
-			rez = rez * 10 + i;
-
-			o++;
-		}
+		quotient.bigint[i] = digitQuotient;
 	}
 
-	return rez;
+	quotient.len = len;
+	while (quotient.len > 1 && quotient.bigint[quotient.len] == 0) {
+		--quotient.len;
+	}
+
+	return quotient;
 
 }
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator/(int n) {
@@ -322,39 +306,34 @@ void BIGUNSIGNEDINT::operator/=(int obj) {
 	*this = *this / BIGUNSIGNEDINT(obj);
 }
 
-BIGUNSIGNEDINT BIGUNSIGNEDINT::operator%(BIGUNSIGNEDINT const& obj) { //division
-	if (BIGUNSIGNEDINT(0) == obj) throw std::exception("Division by zero!");
+//Rest
 
-	int o = 0;
+BIGUNSIGNEDINT BIGUNSIGNEDINT::operator%(BIGUNSIGNEDINT const& obj) {
+	if (obj == 0 || obj==1) throw std::exception("Division by zero/you cant % by 1!");
+	if (*this == 0) return BIGUNSIGNEDINT(0);
+	if (*this < obj) return *this; 
 
-	BIGUNSIGNEDINT aux, rez;
+	BIGUNSIGNEDINT quotient; 
+	BIGUNSIGNEDINT remainder;
 
-	for (int i = len; i > len - obj.len; i--)
-		aux = aux * 10 + bigint[i];
+	for (int i = len; i > 0; --i) {
+		remainder = remainder * 10 + bigint[i];
 
-	//aux.len = len - obj.len - 1;
-
-	while (len - obj.len - o > 0) {
-
-		if (aux < obj) aux = aux * 10 + bigint[len - obj.len - o];
-		//cout << bigint[len - obj.len - o] << ' ';
-		if (BIGUNSIGNEDINT(0) == aux) {
-			rez = rez * 10;
-			o++;
-			continue;
-		}
-		int i = 0;
-		while (aux >= obj) {
-			aux = aux - obj;
-			i++;
+		int digitQuotient = 0;
+		while (remainder >= obj) {
+			remainder = remainder - obj;
+			++digitQuotient;
 		}
 
-		rez = rez * 10 + i;
-
-		o++;
+		quotient.bigint[i] = digitQuotient;
 	}
 
-	return aux;
+	quotient.len = len;
+	while (quotient.len > 1 && quotient.bigint[quotient.len] == 0) {
+		--quotient.len;
+	}
+
+	return remainder;
 }
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator%(int n) {
 	return *this % BIGUNSIGNEDINT(n);
@@ -363,10 +342,14 @@ BIGUNSIGNEDINT BIGUNSIGNEDINT::operator%(long long n) {
 	return *this % BIGUNSIGNEDINT(n);
 }
 
+//---------------------------------------------------------------------------------------------------
 
-//logic operations
+
+
+//Logic Operations-------------------------------------------------------------------------------
 
 bool BIGUNSIGNEDINT::operator<(BIGUNSIGNEDINT const& obj) {
+	if (obj == 0) return 0;
 	if (len == obj.len) {
 		for (int i = len; i > 0; i--) {
 			if (bigint[i] == obj.bigint[i]) continue;
@@ -386,6 +369,7 @@ bool BIGUNSIGNEDINT::operator<(long long n) {
 }
 
 bool BIGUNSIGNEDINT::operator>(BIGUNSIGNEDINT const& obj) {
+	if (obj == 0) return 1;
 	if (len == obj.len) {
 		for (int i = len; i > 0; i--) {
 			if (bigint[i] == obj.bigint[i]) continue;
@@ -417,22 +401,35 @@ bool BIGUNSIGNEDINT::operator==(BIGUNSIGNEDINT const& obj) {
 	return 1;
 }
 bool BIGUNSIGNEDINT::operator==(int num) {
-	return BIGUNSIGNEDINT(num) == *this;
+	if (num == 0) {
+		return len == 1 && bigint[1] == 0;
+	}
+	return *this == BIGUNSIGNEDINT(num);
 }
 bool BIGUNSIGNEDINT::operator==(long long num) {
 	return BIGUNSIGNEDINT(num) == *this;
+}
+
+bool BIGUNSIGNEDINT::operator!=(BIGUNSIGNEDINT const& obj) {
+	return !(*this == obj);
+}
+bool BIGUNSIGNEDINT::operator!=(int num) {
+	return !(*this == BIGUNSIGNEDINT(num));
+}
+bool BIGUNSIGNEDINT::operator!=(long long num) {
+	return !(BIGUNSIGNEDINT(num) == *this);
 }
 
 bool BIGUNSIGNEDINT::operator<=(BIGUNSIGNEDINT const& obj) {
 	if (len < obj.len) return 1;
 	if (len > obj.len) return 0;
 
+	if (*this == obj) return 1;
+
 	for (int i = len; i > 0; i--) {
 		if (bigint[i] < obj.bigint[i]) return 1;
 		if (bigint[i] > obj.bigint[i]) return 0;
 	}
-
-	return 1;
 }
 bool BIGUNSIGNEDINT::operator<=(int n) {
 	return *this <= BIGUNSIGNEDINT(n);
@@ -444,6 +441,8 @@ bool BIGUNSIGNEDINT::operator<=(long long n) {
 bool BIGUNSIGNEDINT::operator>=(BIGUNSIGNEDINT const& obj) {
 	if (len < obj.len) return 0;
 	if (len > obj.len) return 1;
+
+	if (*this == obj) return 1;
 
 	for (int i = len; i > 0; i--) {
 		if (bigint[i] < obj.bigint[i]) return 0;
@@ -472,16 +471,74 @@ void BIGUNSIGNEDINT::operator=(long long n) {
 	*this = BIGUNSIGNEDINT(n);
 }
 
-/*
-BIGUNSIGNEDINT custom_pow(BIGUNSIGNEDINT const& obj) {
-	if (BIGUNSIGNEDINT(0) == obj) return 1;
-	if (obj % 2 == 1) return (*this * custom_pow((obj-1)));
-	BIGUNSIGNEDINT P = custom_pow((BIGUNSIGNEDINT(obj/2)));
-	return P * P;
+
+BIGUNSIGNEDINT big::bigpow(BIGUNSIGNEDINT const& obj, BIGUNSIGNEDINT const& that) {
+	BIGUNSIGNEDINT P, A, n;
+	P = 1, A = obj, n = that;
+	while (n != 0)
+	{
+		if (n % 2 == 1) {
+			P = P * A;
+		}
+		A = A * A;
+		n /= 2;
+	}
+	return P;
 }
-BIGUNSIGNEDINT custom_pow(int n) {
-	return custom_pow(BIGUNSIGNEDINT(n));
-}*/
+BIGUNSIGNEDINT big::bigpow(BIGUNSIGNEDINT const& obj, int n) {
+	return big::bigpow(obj, BIGUNSIGNEDINT(n));
+}
+BIGUNSIGNEDINT big::bigpow(int n, BIGUNSIGNEDINT const& obj) {
+	return big::bigpow(BIGUNSIGNEDINT(n), obj);
+}
+
+
+BIGUNSIGNEDINT big::factorial(BIGUNSIGNEDINT const& obj) {
+	BIGUNSIGNEDINT fact = 1;
+	for (int i = 2; i <= obj; ++i)
+		fact *= i;
+	return fact;
+}
+BIGUNSIGNEDINT big::factorial(int n) {
+	BIGUNSIGNEDINT fact = 1;
+	for (int i = 2; i <= n; ++i)
+		fact *= i;
+	return fact;
+}
+
+
+bool big::prime(BIGUNSIGNEDINT& obj) {
+	BIGUNSIGNEDINT d;
+	for (d = 2; d * d < obj; d += 1) {
+		if (obj % d == 0)
+			return 0;
+	}
+	if (d * d == obj) return 0;
+	return 1;
+}
+
+
+int big::sum_digit(BIGUNSIGNEDINT const& obj) {
+	int sum = 0;
+	for (int i = 1; i <= obj.bigint[0]; i++)
+		sum += obj.bigint[i];
+	return sum;
+}
+
+
+BIGUNSIGNEDINT big::bigsqrt(BIGUNSIGNEDINT const& obj) {
+	BIGUNSIGNEDINT d;
+	for (d = 2; d * d < obj; d += 1);
+	return d;
+}
+
+BIGUNSIGNEDINT big::bigcbrt(BIGUNSIGNEDINT const& obj) {
+	BIGUNSIGNEDINT d;
+	for (d = 2; d * d * d < obj; d += 1);
+	return d;
+}
+
+//----------------------------------------------------------------------------------------
 
 
 //printing or input
@@ -515,11 +572,11 @@ std::istream& big::operator>>(std::istream& console, BIGUNSIGNEDINT& obj) {
 
 //converting
 
-int BIGUNSIGNEDINT::to_int() {
+int big::to_int(BIGUNSIGNEDINT obj) {
 	int rez = 0;
-	if (len <= 10 && *this <= INT32_MAX) {
-		for (int i = len; i > 0; i--) {
-			rez = rez * 10 + bigint[i];
+	if (obj.len <= 10 && obj <= INT32_MAX) {
+		for (int i = obj.len; i > 0; i--) {
+			rez = rez * 10 + obj.bigint[i];
 		}
 	}
 	else
@@ -528,11 +585,11 @@ int BIGUNSIGNEDINT::to_int() {
 	return rez;
 }
 
-long long BIGUNSIGNEDINT::to_longlong() {
+long long big::to_longlong(BIGUNSIGNEDINT obj) {
 	long long rez = 0;
-	if (len<=19 && *this <= INT64_MAX) {
-		for (int i = len; i > 0; i--) {
-			rez = rez * 10 + bigint[i];
+	if (obj.len<=19 && obj <= INT64_MAX) {
+		for (int i = obj.len; i > 0; i--) {
+			rez = rez * 10 + obj.bigint[i];
 		}
 	}
 	else
@@ -579,37 +636,37 @@ BIGUNSIGNEDINT operator%(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) % obj;
 }
 
-bool operator==(int num, BIGUNSIGNEDINT const& obj) {
+bool big::operator==(int num, BIGUNSIGNEDINT const& obj) {
 	return BIGUNSIGNEDINT(num) == obj;
 }
-bool operator==(BIGUNSIGNEDINT const& obj, int num) {
+bool big::operator==(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) == obj;
 }
 
-bool operator>(int num, BIGUNSIGNEDINT const& obj) {
+bool big::operator>(int num, BIGUNSIGNEDINT const& obj) {
 	return BIGUNSIGNEDINT(num) > obj;
 }
-bool operator>(BIGUNSIGNEDINT const& obj, int num) {
+bool big::operator>(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) > obj;
 }
 
-bool operator<(int num, BIGUNSIGNEDINT const& obj) {
+bool big::operator<(int num, BIGUNSIGNEDINT const& obj) {
 	return BIGUNSIGNEDINT(num) < obj;
 }
-bool operator<(BIGUNSIGNEDINT const& obj, int num) {
+bool big::operator<(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) < obj;
 }
 
-bool operator>=(int num, BIGUNSIGNEDINT const& obj) {
+bool big::operator>=(int num, BIGUNSIGNEDINT const& obj) {
 	return BIGUNSIGNEDINT(num) >= obj;
 }
-bool operator>=(BIGUNSIGNEDINT const& obj, int num) {
+bool big::operator>=(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) >= obj;
 }
 
-bool operator<=(int num, BIGUNSIGNEDINT const& obj) {
+bool big::operator<=(int num, BIGUNSIGNEDINT const& obj) {
 	return BIGUNSIGNEDINT(num) <= obj;
 }
-bool operator<=(BIGUNSIGNEDINT const& obj, int num) {
+bool big::operator<=(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) <= obj;
 }
