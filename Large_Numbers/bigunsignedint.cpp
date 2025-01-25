@@ -54,7 +54,7 @@ void BIGUNSIGNEDINT::set(char* p) {
 	//set the number to the one in the char array
 	for (int i = l; i > 0; i--)
 		if (p[l - i] < 48 || p[l - i]>57) {
-			throw std::exception("Undecimal symbol!");
+			throw std::runtime_error("Undecimal symbol!");
 			break;
 		}
 		else
@@ -204,7 +204,7 @@ BIGUNSIGNEDINT BIGUNSIGNEDINT::operator*(BIGUNSIGNEDINT const& obj) { //multipli
 
 	int mx = len + obj.len - 1;
 
-	if (mx > 10049) throw std::exception("Value is too large for this type!");
+	if (mx > 10049) throw std::runtime_error("Value is too large for this type!");
 
 	int add = 0;
 
@@ -262,7 +262,7 @@ void BIGUNSIGNEDINT::operator*=(int obj) {
 //Division
 
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator/(BIGUNSIGNEDINT const& obj) { //division
-	if (obj == 0) throw std::exception("Division by zero!");
+	if (obj == 0) throw std::runtime_error("Division by zero!");
 	if (*this == 0) return 0;
 	if (*this < obj) return 0;
 	if (obj == 1) return *this;
@@ -309,7 +309,7 @@ void BIGUNSIGNEDINT::operator/=(int obj) {
 //Rest
 
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator%(BIGUNSIGNEDINT const& obj) {
-	if (obj == 0 || obj==1) throw std::exception("Division by zero/you cant % by 1!");
+	if (obj == 0 || obj==1) throw std::runtime_error("Division by zero/you cant % by 1!");
 	if (*this == 0) return BIGUNSIGNEDINT(0);
 	if (*this < obj) return *this; 
 
@@ -560,7 +560,7 @@ std::istream& big::operator>>(std::istream& console, BIGUNSIGNEDINT& obj) {
 	obj.len = l = strlen(p);
 	for (int i = obj.len; i > 0; i--)
 		if (p[l - i] < 48 || p[l - i]>57) {
-			throw std::exception("Undecimal symbol!");
+			throw std::runtime_error("Undecimal symbol!");
 			break;
 		}
 		else
@@ -580,7 +580,7 @@ int big::to_int(BIGUNSIGNEDINT obj) {
 		}
 	}
 	else
-		throw std::exception("Integer limit excedeed.");
+		throw std::runtime_error("Integer limit excedeed.");
 
 	return rez;
 }
@@ -593,7 +593,7 @@ long long big::to_longlong(BIGUNSIGNEDINT obj) {
 		}
 	}
 	else
-		throw std::exception("Long long limit excedeed. Cannot convert to primitive C++ data types.");
+		throw std::runtime_error("Long long limit excedeed. Cannot convert to primitive C++ data types.");
 
 	return rez;
 }
