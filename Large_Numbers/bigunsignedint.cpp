@@ -528,14 +528,14 @@ int big::sum_digit(BIGUNSIGNEDINT const& obj) {
 
 BIGUNSIGNEDINT big::bigsqrt(BIGUNSIGNEDINT const& obj) {
 	BIGUNSIGNEDINT d;
-	for (d = 2; d * d < obj; d += 1);
-	return d;
+	for (d = 2; d * d <= obj; d += 1);
+	return d-1;
 }
 
 BIGUNSIGNEDINT big::bigcbrt(BIGUNSIGNEDINT const& obj) {
 	BIGUNSIGNEDINT d;
-	for (d = 2; d * d * d < obj; d += 1);
-	return d;
+	for (d = 2; d * d * d <= obj; d += 1);
+	return d-1;
 }
 
 //----------------------------------------------------------------------------------------
