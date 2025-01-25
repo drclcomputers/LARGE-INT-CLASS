@@ -127,11 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="bigint.cpp" />
+    <ClCompile Include="bigunsignedint.cpp" />
     <ClCompile Include="Large_Numbers.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bigint.h" />
+    <ClInclude Include="bigunsignedint.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,18 +1,18 @@
-//BIGINT is a class made to store numbers with up to 10000 digits.
+//BIGUNSIGNEDINT is a class made to store numbers with up to 10000 digits.
 //For addition, the result of the sum needs to have maximum 10000 digits.
 //For multiplication, the numbers need to have a maximum of 5000 digits, so the max number is n=9999...9 (5000 of 9s) so n^2 will have 100001 digits. 
 
 
 #include<iostream>
 
-#include "bigint.h"
+#include "bigunsignedint.h"
 
 using namespace std;
 using namespace big;
 
 
 int main() {
-	BIGINT A, B;
+	BIGUNSIGNEDINT A, B;
 	char a[10000] = "123456789", b[100]="2147000";
 	A.set(a);
 	B.set(b);
@@ -20,7 +20,7 @@ int main() {
 	//A = 12;
 	//B = 3;
 
-	cout << A*B;
+	cout << A*B*B*B;
 
 
 	return 0;

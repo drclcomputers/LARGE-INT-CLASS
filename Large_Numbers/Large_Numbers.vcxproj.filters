@@ -18,12 +18,12 @@
     <ClCompile Include="Large_Numbers.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bigint.cpp">
+    <ClCompile Include="bigunsignedint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="bigint.h">
+    <ClInclude Include="bigunsignedint.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
