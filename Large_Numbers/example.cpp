@@ -13,14 +13,14 @@ using namespace big;
 
 int main() {
 	BIGUNSIGNEDINT A, B;
-	char a[10000] = "125", b[100]="51";
+	char a[10000] = "1234567890111", b[100]="5111";
 	A.set(a);
 	B.set(b);
 
 	//A = 12;
 	//B = 3;
 
-	cout << bigcbrt(A);
+	cout << bigrandrange(12349, 0, 9999999999999999);
 
 	return 0;
 }

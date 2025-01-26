@@ -128,7 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bigunsignedint.cpp" />
-    <ClCompile Include="Large_Numbers.cpp" />
+    <ClCompile Include="example.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="bigunsignedint.h" />

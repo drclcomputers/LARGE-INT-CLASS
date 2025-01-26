@@ -31,7 +31,7 @@ BIGUNSIGNEDINT::BIGUNSIGNEDINT(long long num) { //constructor 2
 	}
 }
 
-BIGUNSIGNEDINT::BIGUNSIGNEDINT(char* p) { //constructor 3
+BIGUNSIGNEDINT::BIGUNSIGNEDINT(const char* p) { //constructor 3
 	//set number to 0
 	set_zero();
 	if (p != NULL)
@@ -41,7 +41,7 @@ BIGUNSIGNEDINT::BIGUNSIGNEDINT(char* p) { //constructor 3
 
 //set values
 
-void BIGUNSIGNEDINT::set(char* p) {
+void BIGUNSIGNEDINT::set(const char* p) {
 	set_zero();
 
 	if (p == nullptr) return;
@@ -306,7 +306,7 @@ void BIGUNSIGNEDINT::operator/=(int obj) {
 	*this = *this / BIGUNSIGNEDINT(obj);
 }
 
-//Rest
+//Remainder
 
 BIGUNSIGNEDINT BIGUNSIGNEDINT::operator%(BIGUNSIGNEDINT const& obj) {
 	if (obj == 0 || obj==1) throw std::runtime_error("Division by zero/you cant % by 1!");
@@ -559,7 +559,9 @@ std::istream& big::operator>>(std::istream& console, BIGUNSIGNEDINT& obj) {
 	obj.set_zero();
 
 	int l;
-	obj.len = l = strlen(p);
+	int strlenp=0;
+	for (strlenp; p[strlenp] != '\0'; strlenp++);
+	obj.len = l = strlenp;
 	for (int i = obj.len; i > 0; i--)
 		if (p[l - i] < 48 || p[l - i]>57) {
 			throw std::runtime_error("Undecimal symbol!");
@@ -571,6 +573,43 @@ std::istream& big::operator>>(std::istream& console, BIGUNSIGNEDINT& obj) {
 	return console;
 }
 
+void big::format_print(const BIGUNSIGNEDINT& obj, int type=5) { 
+	//type 1 -> '
+	//type 2 -> .
+	//type 3 -> ,
+	//type 4 -> `
+	//type 5 -> space ' '
+	char separator;
+	switch (type) {
+	case 1:
+		separator = '\'';
+		break;
+	case 2:
+		separator = '.';
+		break;
+	case 3:
+		separator = ',';
+		break;
+	case 4:
+		separator = '`';
+		break;
+	default:
+		separator = ' ';
+		break;
+	}
+	
+	int aux = obj.len % 3, a=aux;
+	if (aux) {
+		aux = obj.len;
+		while (aux>obj.len-obj.len%3) std::cout << obj.bigint[aux--];
+		std::cout << separator;
+	}
+
+	for (int i = obj.len - a; i > 0; i -= 3) {
+		std::cout << obj.bigint[i] << obj.bigint[i - 1] << obj.bigint[i - 2];
+		if (i != 3) std::cout << separator;
+	}
+}
 
 //converting
 
@@ -671,4 +710,16 @@ bool big::operator<=(int num, BIGUNSIGNEDINT const& obj) {
 }
 bool big::operator<=(BIGUNSIGNEDINT const& obj, int num) {
 	return BIGUNSIGNEDINT(num) <= obj;
+}
+
+//Random Number Generator
+
+BIGUNSIGNEDINT big::bigrandrange(BIGUNSIGNEDINT seed, BIGUNSIGNEDINT min, BIGUNSIGNEDINT max) {
+	if (max == 0) max.set(BIGUNSIGNEDINT_MAX);
+	BIGUNSIGNEDINT a, c, m;
+	a = 1103515245;
+	c = 12345;
+	m = 2147483648;
+	seed = (a * seed + c) % m;
+	return min + (seed % (max - min + 1));
 }
