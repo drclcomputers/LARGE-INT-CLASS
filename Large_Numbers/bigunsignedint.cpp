@@ -639,6 +639,14 @@ long long big::to_longlong(BIGUNSIGNEDINT obj) {
 	return rez;
 }
 
+char* big::to_chararray(BIGUNSIGNEDINT obj) {
+	char nr[10050] = "";
+	for (int i = obj.len; i > 0; i--)
+		nr[obj.len - i] = char(obj.bigint[i]+48);
+	nr[obj.len] = '\0';
+	return nr;
+}
+
 
 //other functions
 

@@ -4,6 +4,7 @@
 
 
 #include<iostream>
+#include<cstring>
 
 #include "bigunsignedint.h"
 
@@ -13,14 +14,18 @@ using namespace big;
 
 int main() {
 	BIGUNSIGNEDINT A, B;
-	char a[10000] = "1234567890111", b[100]="5111";
+	char a[10000] = "123456789011", b[100]="5111";
 	A.set(a);
 	B.set(b);
 
 	//A = 12;
 	//B = 3;
 
-	cout << bigrandrange(12349, 0, 9999999999999999);
+	cout << b << '\n';
+
+	cout<<to_chararray(A);
+
+	//cout << b;
 
 	return 0;
 }

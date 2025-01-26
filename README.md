@@ -17,7 +17,8 @@ Example: BIGUNSIGNEDINT a; a=a+5; a=a*a; if(a>123456); if(a!=34567); bigpow(a, 5
 
 <ins>Cap III – Printing and Input</ins>
 
-You can easily print or read BIGUNSIGNEDINT variables with the << and >> operator, just like any other variable. Additionally, there is the format_print(a, type) function that adds a thousand’s separator. Type indicates the type of separator.
+You can easily print or read BIGUNSIGNEDINT variables with the << and >> operator, just like any other variable. 
+Additionally, there is the format_print(a, type) function that adds a thousand’s separator. Type indicates the type of separator.
 //type 1 -> '
 //type 2 -> .
 //type 3 -> ,
@@ -28,7 +29,8 @@ Example: format_print(a, 2) -> 1.234.456.789
 
 <ins>Cap IV – Other Functions</ins>
 
-If your BIGUNSIGNEDINT variable is within the limits, you can convert it to int or long long types. Moreover there is a Random Number Generator, bigranrange(seed, min, max).
+If your BIGUNSIGNEDINT variable is within the limits, you can convert it to int, long long or even char array, by using to_int(), to_longlong, to_chararray().  
+Moreover there is a Random Number Generator, bigranrange(seed, min, max).
 seed ->  random number chosen by whoever uses this function
 min -> a minimum value
 max -> a maximum value

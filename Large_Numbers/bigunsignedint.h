@@ -97,9 +97,11 @@ namespace big {
 
 	void format_print(const BIGUNSIGNEDINT& obj, int type);
 
-	int to_int(BIGUNSIGNEDINT obj);
 
+	int to_int(BIGUNSIGNEDINT obj);
 	long long to_longlong(BIGUNSIGNEDINT obj);
+	char* to_chararray(BIGUNSIGNEDINT obj);
+
 
 	BIGUNSIGNEDINT bigpow(BIGUNSIGNEDINT const& obj, BIGUNSIGNEDINT const& that);
 	BIGUNSIGNEDINT bigpow(BIGUNSIGNEDINT const&  obj, int n);
@@ -108,10 +110,12 @@ namespace big {
 
 	BIGUNSIGNEDINT factorial(BIGUNSIGNEDINT const& obj);
 	BIGUNSIGNEDINT factorial(int n);
+	
 
 	bool prime(BIGUNSIGNEDINT & obj);
 
 	int sum_digit(BIGUNSIGNEDINT const& obj);
+
 
 	BIGUNSIGNEDINT bigsqrt(BIGUNSIGNEDINT const& obj);
 	BIGUNSIGNEDINT bigcbrt(BIGUNSIGNEDINT const& obj);
