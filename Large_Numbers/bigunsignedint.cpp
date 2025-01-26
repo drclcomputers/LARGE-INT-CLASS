@@ -430,6 +430,8 @@ bool BIGUNSIGNEDINT::operator<=(BIGUNSIGNEDINT const& obj) {
 		if (bigint[i] < obj.bigint[i]) return 1;
 		if (bigint[i] > obj.bigint[i]) return 0;
 	}
+
+	return 1;
 }
 bool BIGUNSIGNEDINT::operator<=(int n) {
 	return *this <= BIGUNSIGNEDINT(n);
