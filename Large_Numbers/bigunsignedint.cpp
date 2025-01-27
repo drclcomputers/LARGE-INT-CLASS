@@ -46,7 +46,9 @@ void BIGUNSIGNEDINT::set(const char* p) {
 
 	if (p == nullptr) return;
 
-	short int l = strlen(p);
+	int strlenp = 0;
+	for (strlenp; p[strlenp] != '\0'; strlenp++);
+	short int l = strlenp;
 
 	//set to element 0 the length of the number
 	len = l;
